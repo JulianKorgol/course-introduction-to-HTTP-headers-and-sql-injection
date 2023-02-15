@@ -6,23 +6,20 @@ function App() {
     const website_url = window.location.hostname;
     const [output, setOutput] = React.useState("");
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const username = e.target.username.value;
         const password = e.target.password.value;
 
-        const response = axios.post(`http://${website_url}:8000/login`, {
+        const response = await axios.post(`http://${website_url}:8000/login`, {
             username: username,
             password: password
-        })
-
-        // Check if header is 200
-        if (response.status === 200) {
-            setOutput(response.data);
-        } else {
-            setOutput("Error: " + response.status);
-        }
+        }).catch(error => {
+                setOutput("Error: " + "Invalid username or password.");
+                return;
+        });
+        setOutput("Logged in as:" + response.data.username);
     }
 
   return (
